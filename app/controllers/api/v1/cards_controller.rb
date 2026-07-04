@@ -1,8 +1,7 @@
 module Api
   module V1
     class CardsController < ApplicationController
-      before_action :set_board
-      before_action :set_list
+      before_action :set_list, only: %i[create]
       before_action :set_card, only: %i[update destroy]
 
       def create
@@ -16,9 +15,8 @@ module Api
       end
 
       def update
-        # Allow moving card to different list
         if params[:list_id_target].present?
-          target_list = @board.lists.find(params[:list_id_target])
+          target_list = List.joins(:board).find_by!(id: params[:list_id_target], boards: { user_id: current_user.id })
           @card.list = target_list
           @card.position = target_list.cards.maximum(:position).to_i + 1
         end
@@ -36,20 +34,14 @@ module Api
 
       private
 
-      def set_board
-        @board = current_user.boards.find(params[:board_id])
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Board not found' }, status: :not_found
-      end
-
       def set_list
-        @list = @board.lists.find(params[:list_id])
+        @list = List.joins(:board).find_by!(id: params[:list_id], boards: { user_id: current_user.id })
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'List not found' }, status: :not_found
       end
 
       def set_card
-        @card = @list.cards.find(params[:id])
+        @card = Card.joins(list: :board).find_by!(id: params[:id], boards: { user_id: current_user.id })
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Card not found' }, status: :not_found
       end
