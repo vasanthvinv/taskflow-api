@@ -1,0 +1,63 @@
+  [1m[35m (104.5ms)[0m  [1m[35mCREATE DATABASE "taskflow_api_development" ENCODING = 'unicode' /*application='TaskflowApi'*/[0m
+  [1m[35m (102.5ms)[0m  [1m[35mCREATE DATABASE "taskflow_api_development" ENCODING = 'unicode' /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='TaskflowApi'*/[0m
+  [1m[35m (133.8ms)[0m  [1m[35mCREATE DATABASE "taskflow_api_development" ENCODING = 'unicode' /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='TaskflowApi'*/[0m
+  [1m[35m (121.3ms)[0m  [1m[35mCREATE DATABASE "taskflow_api_test" ENCODING = 'unicode' /*application='TaskflowApi'*/[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY) /*application='TaskflowApi'*/[0m
+  [1m[35m (7.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='TaskflowApi'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(2766925479220035630) /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-07-04 17:58:56.036586', '2026-07-04 17:58:56.039664') RETURNING "key" /*application='TaskflowApi'*/[0m
+Migrating to CreateUsers (20260704175835)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*application='TaskflowApi'*/[0m
+  [1m[35m (14.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "name" character varying, "email" character varying, "password_digest" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='TaskflowApi'*/[0m
+  [1m[35m (2.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email") /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260704175835') RETURNING "version" /*application='TaskflowApi'*/[0m
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT /*application='TaskflowApi'*/[0m
+Migrating to CreateBoards (20260704175843)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*application='TaskflowApi'*/[0m
+  [1m[35m (10.2ms)[0m  [1m[35mCREATE TABLE "boards" ("id" bigserial primary key, "title" character varying, "description" text, "color" character varying, "user_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0732f8ef3d"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='TaskflowApi'*/[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE INDEX "index_boards_on_user_id" ON "boards" ("user_id") /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260704175843') RETURNING "version" /*application='TaskflowApi'*/[0m
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[35mCOMMIT /*application='TaskflowApi'*/[0m
+Migrating to CreateLists (20260704175846)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*application='TaskflowApi'*/[0m
+  [1m[35m (9.6ms)[0m  [1m[35mCREATE TABLE "lists" ("id" bigserial primary key, "title" character varying, "position" integer, "board_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_0d3f677137"
+FOREIGN KEY ("board_id")
+  REFERENCES "boards" ("id")
+) /*application='TaskflowApi'*/[0m
+  [1m[35m (3.9ms)[0m  [1m[35mCREATE INDEX "index_lists_on_board_id" ON "lists" ("board_id") /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260704175846') RETURNING "version" /*application='TaskflowApi'*/[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT /*application='TaskflowApi'*/[0m
+Migrating to CreateCards (20260704175849)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*application='TaskflowApi'*/[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "cards" ("id" bigserial primary key, "title" character varying, "description" text, "position" integer, "due_date" date, "label" character varying, "list_id" bigint NOT NULL, "user_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_11b32bc490"
+FOREIGN KEY ("list_id")
+  REFERENCES "lists" ("id")
+, CONSTRAINT "fk_rails_8ef7749967"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='TaskflowApi'*/[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE INDEX "index_cards_on_list_id" ON "cards" ("list_id") /*application='TaskflowApi'*/[0m
+  [1m[35m (2.6ms)[0m  [1m[35mCREATE INDEX "index_cards_on_user_id" ON "cards" ("user_id") /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260704175849') RETURNING "version" /*application='TaskflowApi'*/[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT /*application='TaskflowApi'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(2766925479220035630) /*application='TaskflowApi'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO "$user", public /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='TaskflowApi'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO "$user", public /*application='TaskflowApi'*/[0m
+Started GET "/up" for ::1 at 2026-07-04 23:31:29 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='TaskflowApi'*/[0m
+Processing by Rails::HealthController#show as */*
+  Rendering html template
+  Rendered html template (Duration: 0.0ms | GC: 0.0ms)
+Completed 200 OK in 15ms (Views: 9.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
