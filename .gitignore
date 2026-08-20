@@ -1,0 +1,29 @@
+# Rails-generated files that should never be committed
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles
+!/tmp/pids/
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore uploaded files in development.
+/storage/*
+!/storage/.keep
+
+/public/assets
+
+# Ignore master key for decrypting credentials and any other unencrypted config/master files.
+/config/master.key
+/config/credentials/*.key
+
+# dependencies
+/vendor/bundle
+/.bundle
+
+.byebug_history
+.env
+.env.*
+!.env.example
